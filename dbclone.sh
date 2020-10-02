@@ -18,6 +18,9 @@ MYSQL_PWORD=2
 MYSQL_DBSOURCE=crm7
 MYSQL_DBDESTINATION=crm7pruebas
 
+# Telegram Parameters
+BOT_TOKEN="ASDF:123456789"
+CHANNEL="@channel"
 #==============================================================================
 # METHODS
 #==============================================================================
@@ -30,6 +33,9 @@ function mysql_login() {
   echo $mysql_login
 }
 
+function send_alert_telegram() {
+	curl -s "https://api.telegram.org/bot$BOT_TOKEN/sendMessage?chat_id=$CHANNEL&text=DB $MYSQL_DBSOURCE clonned on $MYSQL_DBDESTINATION"
+}
 #==============================================================================
 # RUN SCRIPT
 #==============================================================================
@@ -38,4 +44,5 @@ mysql $(mysql_login) -e "drop database $MYSQL_DBDESTINATION; CREATE DATABASE $MY
 mysqldump $(mysql_login) $MYSQL_DBSOURCE > $MYSQL_DBDESTINATION.sql 
 mysql $(mysql_login) $MYSQL_DBDESTINATION < $MYSQL_DBDESTINATION.sql
 
+send_alert_telegram
 printf "DB clonned!\n\n"
